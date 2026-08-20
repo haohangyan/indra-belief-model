@@ -50,7 +50,13 @@ FIT_GOLD_SHA256 = "8e266acefd191e25a92f88febcb6f6d7f1b3be8c8d8f45a18012f76d9930f
 HOLDOUT_GOLD_SHA256 = "aa022aa0d2543f7031a686ec661a3bc3f59dec7cb9cc12f049ff0068653ecb49"
 EXTERNAL_GOLD_SHA256 = "52cde61f8f3e3dac01ad13f09c9d6db623eea888ffd617410d1c88de6527c80f"
 HOLDOUT_LARGE_FIT_GOLD_SHA256 = "f042ba6769995667f48e5a12b145b64e231aac063104c690ad21bb22aeb0c019"
+VLLM_VERDICT_ONLY_PROMPT_SHA256 = (
+    "cd14d9e74d2ea599f343df86a9df9ccf07b87885c8f43a1d0d6a70165e525da5"
+)
 
+EXTERNAL_CURATOR_GOLD_V2_SHA256 = (
+    "45eab0b5b42a2d364962d0cf3c09a7832f9a95c19044df86fefc861a76e502fd"
+)
 # Reader configuration -> confusion matrix (verdict × curator gold) tallied after
 # exact-pair multi-curator aggregation and duplicate-pair removal. These four
 # counts are the reader calibration. The fit corpus is PER PROFILE: most are
@@ -100,6 +106,12 @@ _CONFUSION: dict[str, dict[str, int]] = {
     # other (delta err-F1 -0.0082, 95% CI [-0.0259, +0.0092], 95.4% verdict
     # agreement over 560 shared pairs).
     "local_gemma_mlx": {"cc": 651, "ci": 91, "ic": 148, "ii": 710},
+     "vllm_gemma_verdict_only": {
+        "cc": 466,
+        "ci": 133,
+        "ic": 73,
+        "ii": 375,
+    },
 }
 
 _PROFILE_META = {
@@ -184,6 +196,31 @@ _PROFILE_META = {
                      "no mid-thought verdict reached these counts."),
         },
     },
+    "vllm_gemma_verdict_only": {
+        "profile_id": (
+            "vllm-gemma-4-26b"
+            "@prompt-cd14d9e74d2e"
+            "@external_curator_gold_v2"
+        ),
+        "reader_model": "vllm-gemma-4-26b",
+        "prompt_sha256": VLLM_VERDICT_ONLY_PROMPT_SHA256,
+        "fit_gold": "data/benchmark/external_curator_gold_v2.jsonl",
+        "fit_gold_sha256": EXTERNAL_CURATOR_GOLD_V2_SHA256,
+        "fit_run": "/scratch/h.yan/data/gold_results",
+        "deployment_status": "enabled",
+        "validation": {
+            "result": "pass",
+            "gold": "data/benchmark/external_curator_gold_v2.jsonl",
+            "gold_sha256": EXTERNAL_CURATOR_GOLD_V2_SHA256,
+            "run": "/scratch/h.yan/data/gold_results",
+            "gate": "10 reseeded held-out splits: ranking PASS; scoring PASS",
+            "note": (
+                "Median Brier 0.1546 -> 0.1316; ECE 0.0204 -> "
+                "0.0415; resolution gain 0.0250 versus reliability "
+                "cost 0.0031."
+            ),
+        },
+    },
 }
 
 _FITTED_CONFIGS = {
@@ -192,6 +229,10 @@ _FITTED_CONFIGS = {
     ("bedrock-gemma-4-26b", REASONING_FIRST_NOCONF_PROMPT_SHA256): "gemma_bedrock_rf_noconf",
     ("remote-medpsy-4b", BASELINE_PROMPT_SHA256): "medpsy_remote",
     ("local-gemma-4-26b", REASONING_FIRST_PROMPT_SHA256): "local_gemma_mlx",
+    (
+        "vllm-gemma-4-26b",
+        VLLM_VERDICT_ONLY_PROMPT_SHA256,
+    ): "vllm_gemma_verdict_only",
 }
 
 

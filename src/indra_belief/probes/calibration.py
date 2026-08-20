@@ -92,6 +92,10 @@ MIN_PROBE_TOP_LOGPROBS = 256
 # ship the artifact, and add one row here. Adding a row is the whole change.
 _SENTENCE_CALIBRATIONS: dict[tuple[str, str], str] = {
     (CALIBRATION_MODEL, CALIBRATION_MODEL_ID): CALIBRATION_FILENAME,
+    (
+            "vllm-gemma-4-26b",
+            "google/gemma-4-26B-A4B-it",
+    ): "incall_vllm.json",
 }
 
 

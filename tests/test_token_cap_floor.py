@@ -109,6 +109,7 @@ def test_the_three_fitted_readers_keep_the_caps_their_profiles_were_measured_und
         # validation ran at 8192, and 4 capped reads were withheld on that basis;
         # changing this cap changes the reader the profile describes.
         "local-gemma-4-26b": 8192,
+        "vllm-gemma-4-26b": 8192,
     }
     profiled = {model for model, _sha in _FITTED_CONFIGS}
     assert profiled == set(expected), (
